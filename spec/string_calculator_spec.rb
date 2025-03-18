@@ -18,11 +18,11 @@ RSpec.describe StringCalculator do
       expect(StringCalculator.add("1,2,3,4,5")).to eq(15)
     end
 
-    it "handles new line as delimiter" do
+    it "returns the sum when new line as delimiter" do
       expect(StringCalculator.add("1\n2,3")).to eq(6)
     end
 
-    it "supports custom delimiter defined in the string" do
+    it "returns the sum when custom delimiter passed" do
       expect(StringCalculator.add("//;\n1;2")).to eq(3)
     end
 
