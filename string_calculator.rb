@@ -1,22 +1,28 @@
 class StringCalculator
   def self.add(numbers)
-    return 0 if numbers.empty?
-
-    digits = extract_digits(numbers)
-    raise_negative_number(digits)
+    digits = parse_and_validate_numbers(numbers)
 
     digits.sum
   end
 
   private
 
+  def self.parse_and_validate_numbers(numbers)
+    return [] if numbers.empty?
+
+    digits = extract_digits(numbers)
+    raise_negative_number(digits)
+
+    digits
+  end
+
   def self.extract_digits(numbers)
-    delimiter, number_string = parse_input(numbers)
+    delimiter, number_string = extract_delimiter_and_numbers(numbers)
 
     number_string.split(delimiter).map(&:to_i)
   end
 
-  def self.parse_input(numbers)
+  def self.extract_delimiter_and_numbers(numbers)
     if numbers.start_with?("//")
       delimiter = numbers[2]
       number_string = numbers.split("\n", 2).last
@@ -24,6 +30,7 @@ class StringCalculator
       delimiter = /[\n,]/
       number_string = numbers
     end
+
     [delimiter, number_string]
   end
 
