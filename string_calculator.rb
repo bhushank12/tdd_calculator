@@ -1,31 +1,35 @@
 class StringCalculator
   def self.add(numbers)
     return 0 if numbers.empty?
-    raise_negative_number(numbers) if negatives(numbers).any?
 
-    digits(numbers).sum
+    digits = extract_digits(numbers)
+    raise_negative_number(digits)
+
+    digits.sum
   end
 
   private
 
-  def self.negatives(numbers)
-    digits(numbers).select { |digit| digit.negative? }
+  def self.extract_digits(numbers)
+    delimiter, number_string = parse_input(numbers)
+
+    number_string.split(delimiter).map(&:to_i)
   end
 
-  def self.raise_negative_number(numbers)
-    raise "negative numbers not allowed #{negatives(numbers).join(', ')}"
-  end
-
-  def self.digits(numbers)
-    if custom_delimiter?(numbers)
+  def self.parse_input(numbers)
+    if numbers.start_with?("//")
       delimiter = numbers[2]
-      numbers.split("\n").last.split(delimiter).map(&:to_i)
+      number_string = numbers.split("\n", 2).last
     else
-      numbers.split(/[\n,]/).map(&:to_i)
+      delimiter = /[\n,]/
+      number_string = numbers
     end
+    [delimiter, number_string]
   end
 
-  def self.custom_delimiter?(numbers)
-    numbers.start_with?("//")
+  def self.raise_negative_number(digits)
+    negatives = digits.select(&:negative?)
+
+    raise "negative numbers not allowed #{negatives.join(', ')}" if negatives.any?
   end
 end
